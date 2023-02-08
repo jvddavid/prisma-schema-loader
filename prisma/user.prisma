@@ -1,0 +1,38 @@
+model User {
+  id String @id @map("_id") @db.ObjectId
+
+  avatarUrl String?
+  name      String   @default("User")
+  role      UserRole @default(USER)
+
+  UserAuth        UserAuth?
+  UserPermissions UserPermissions[]
+}
+
+model UserAuth {
+  id String @id @map("_id") @db.ObjectId
+
+  User   User   @relation(fields: [userId], references: [id])
+  userId String @unique @db.ObjectId
+
+  phone    String? @unique
+  email    String? @unique
+  password String?
+
+  status       UserStatus @default(ACTIVE)
+  statusReason String?
+}
+
+enum UserStatus {
+  ACTIVE
+  BANNED
+  DELETED
+}
+
+enum UserRole {
+  SUPERADMIN
+  ADMIN
+  MANAGER
+  SUPPORT
+  USER
+}
